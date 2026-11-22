@@ -77,6 +77,13 @@ html {
   font-weight: 700;
   color: var(--text-white);
   letter-spacing: -0.5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.logo:hover {
+  color: var(--accent-orange);
 }
 
 .accent-orange {
@@ -148,12 +155,13 @@ html {
 
 .hero-section {
   width: 100%;
-  min-height: 75vh;
+  min-height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 110px 6vw 50px;
+  padding: 105px 6vw 28px;
   background: radial-gradient(circle at 50% 20%, rgba(13, 32, 23, 0.45) 0%, rgba(6, 10, 8, 0) 70%), var(--bg-black);
+  scroll-margin-top: 90px;
 }
 
 .hero-wrapper {
@@ -297,11 +305,26 @@ html {
 }
 
 .content-section {
-  padding: 50px 6vw; /* Reduced from 80px/100px to eliminate large empty gaps */
+  padding: 28px 6vw; /* Reduced to ~56px total gap between adjacent section panels */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  scroll-margin-top: 90px; /* Prevents sticky top nav from clipping section headings */
+}
+
+/* Ensure every section with an id has scroll-margin-top */
+section[id],
+#hero,
+#about,
+#skills,
+#projects,
+#freelance,
+#currently-building,
+#opensource,
+#education,
+#contact {
+  scroll-margin-top: 90px;
 }
 
 .section-container {
@@ -416,7 +439,7 @@ html {
    ========================================================================== */
 
 .projects-group {
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   width: 100%;
 }
 
@@ -429,7 +452,7 @@ html {
 }
 
 .other-projects-group {
-  margin-top: 10px;
+  margin-top: 0;
 }
 
 .projects-grid {
@@ -1068,7 +1091,7 @@ html {
   }
 
   .content-section {
-    padding: 40px 5vw;
+    padding: 24px 5vw;
   }
 
   .section-panel {

@@ -272,9 +272,9 @@ export default function App() {
     <div className="app-container">
       {/* Solid Nav Bar - Non-transparent */}
       <nav className="navbar">
-        <div className="logo">
-          Ashok<span className="accent-orange">.dev</span>
-        </div>
+        <a href="#hero" className="logo">
+          Ashok
+        </a>
         <div className="nav-links">
           <a href="#about">About</a>
           <a href="#skills">Skills</a>
