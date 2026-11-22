@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion'
 import {
   Mail,
@@ -12,12 +13,7 @@ import {
   ExternalLink,
   Download,
   GraduationCap,
-  Briefcase,
-  Hammer,
-  GitBranch,
-  MapPin,
-  Clock,
-  Sparkles
+  MapPin
 } from 'lucide-react'
 
 // GitHub SVG Icon
