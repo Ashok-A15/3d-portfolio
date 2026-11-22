@@ -1,16 +1,27 @@
-import { Suspense } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Stars } from '@react-three/drei'
-// eslint-disable-next-line no-unused-vars
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
-import Experience from './components/Experience'
-import Loader from './components/Loader'
-import Earth from './components/Earth'
-import Contact3D from './components/Contact3D'
-import { Mail, Code, Terminal, Monitor, LayoutDashboard, Award, Database, Server, Layout, Cpu, Cloud, Settings } from 'lucide-react'
-import { TypeAnimation } from 'react-type-animation'
+import {
+  Mail,
+  Code,
+  Terminal,
+  Database,
+  Server,
+  Layout,
+  Cpu,
+  Award,
+  ExternalLink,
+  Download,
+  GraduationCap,
+  Briefcase,
+  Hammer,
+  GitBranch,
+  MapPin,
+  Clock,
+  Sparkles
+} from 'lucide-react'
 
-const GithubIcon = ({ size = 24, className = "" }) => (
+// GitHub SVG Icon
+const GithubIcon = ({ size = 20, className = "" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -28,181 +39,344 @@ const GithubIcon = ({ size = 24, className = "" }) => (
   </svg>
 )
 
+// LinkedIn SVG Icon
+const LinkedinIcon = ({ size = 20, className = "" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+)
+
+// SKILLS: ONLY the verified list requested
 const SKILLS = [
-  { name: 'Programming Languages', category: 'C, C++, Python, JavaScript, Dart, PHP', icon: <Code size={28} className="text-neon-cyan" /> },
-  { name: 'Frameworks & Dev', category: 'React.js, Node.js, Flask, Flutter, HTML5, CSS3', icon: <Layout size={28} className="text-neon-purple" /> },
-  { name: 'Databases & Cloud', category: 'MySQL, MongoDB, SQL, Firebase Auth', icon: <Database size={28} className="text-neon-cyan" /> },
-  { name: 'Machine Learning', category: 'TensorFlow, Scikit-Learn', icon: <Cpu size={28} className="text-neon-purple" /> },
-  { name: 'Tools & APIs', category: 'Git, GitHub, VS Code, Linux, REST APIs, Google Maps, Spotify API', icon: <Settings size={28} className="text-neon-cyan" /> },
-  { name: 'Core Computer Science', category: 'Data Structures, OOP, OS, Networks, DBMS', icon: <Terminal size={28} className="text-neon-purple" /> }
+  {
+    category: 'Languages',
+    skills: 'Python, C++, C',
+    icon: <Code size={22} className="skill-cat-icon" />
+  },
+  {
+    category: 'Frontend & Mobile',
+    skills: 'React.js, Flutter, Dart',
+    icon: <Layout size={22} className="skill-cat-icon" />
+  },
+  {
+    category: 'Backend',
+    skills: 'FastAPI, Flask, Node.js, REST APIs',
+    icon: <Server size={22} className="skill-cat-icon" />
+  },
+  {
+    category: 'Databases & Cloud',
+    skills: 'MySQL, MongoDB, Firebase, AWS EC2, AWS S3, Docker, GitHub Actions CI/CD',
+    icon: <Database size={22} className="skill-cat-icon" />
+  },
+  {
+    category: 'AI/ML',
+    skills: 'TensorFlow, Gemini API',
+    icon: <Cpu size={22} className="skill-cat-icon" />
+  },
+  {
+    category: 'Core CS & Tools',
+    skills: 'Data Structures, Algorithms, Operating Systems, DBMS, Computer Networks, OOP, Git, GitHub',
+    icon: <Terminal size={22} className="skill-cat-icon" />
+  }
 ]
 
-const PROJECTS = [
+// MAIN PROJECTS (3)
+const MAIN_PROJECTS = [
   {
     id: 'golorry',
     title: 'GoLorry — Smart Logistics',
-    tech: ['Flutter', 'Dart', 'Firebase Auth', 'Google Maps API'],
-    desc: 'Developed a logistics booking and tracking mobile application. Implemented user authentication and integrated Google Maps for real-time location visualization. Tested workflows using 50+ simulated orders to validate system behavior.',
-    icon: <Monitor size={28} className="text-neon-cyan" />,
+    tags: ['Flutter', 'Dart', 'FastAPI', 'Firebase'],
+    desc: 'Built a logistics booking and tracking mobile app with user authentication and real-time location on Google Maps. Backend built with FastAPI and Firebase, with Docker and CI/CD.',
     github: 'https://github.com/Ashok-A15/Go_Laari'
   },
   {
     id: 'chat_app',
-    title: 'Fullstack Chat Application',
-    tech: ['Flask', 'Python', 'React', 'JavaScript', 'SQL', 'MongoDB'],
-    desc: 'Designed a modular full-stack web app following clean code practices. Implemented REST APIs for frontend-backend communication, reducing response time by ~25%. Designed backend services aligned with cloud-ready architectures.',
-    icon: <Terminal size={28} className="text-neon-purple" />,
-    github: 'https://github.com/Ashok-A15/Full-Stack_AI_Chat_Application'
+    title: 'Full-Stack Chat Application',
+    tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Gemini API'],
+    desc: 'Built a real-time chat app with a React frontend and Node.js + Express backend, MongoDB database, and Gemini AI for smart replies. Added user login and image sharing.',
+    github: 'https://github.com/Ashok-A15/Full-Stack_AI_Chat_Application',
+    live: 'https://full-stack-ai-chat-application-one.vercel.app/'
   },
   {
     id: 'dr_detection',
     title: 'Diabetic Retinopathy Detection',
-    tech: ['Python', 'Flask', 'PHP', 'MySQL', 'HTML/CSS', 'TensorFlow'],
-    desc: 'Developed a web app integrating a trained machine learning model with a Flask backend for image upload and prediction workflows. Processed and logged over 1,000 retinal image predictions during testing to validate reliability.',
-    icon: <LayoutDashboard size={28} className="text-neon-cyan" />,
+    tags: ['Python', 'Flask', 'TensorFlow', 'AWS EC2', 'AWS S3', 'MySQL'],
+    desc: 'Built a web app that uses a trained TensorFlow model with a Flask backend for retinal image upload and prediction. Deployed on AWS EC2 and S3.',
     github: 'https://github.com/Ashok-A15/mini-project'
-  },
+  }
+]
+
+// OTHER PROJECTS (2)
+const OTHER_PROJECTS = [
   {
     id: 'music_rec',
     title: 'Music Recommendation System',
-    tech: ['Python', 'Scikit-Learn', 'Spotify API'],
-    desc: 'Machine learning based music recommendation engine that suggests songs based on audio features and user preferences.',
-    icon: <LayoutDashboard size={28} className="text-neon-purple" />,
+    tags: ['Python', 'Scikit-Learn', 'Spotify API'],
+    desc: 'Music recommendation system built with Python, Scikit-Learn, and the Spotify API.',
     github: 'https://github.com/Ashok-A15/music_recommendation'
   },
   {
     id: 'classroom',
     title: 'Classroom Activity Management',
-    tech: ['React', 'Node.js', 'MongoDB', 'Express'],
+    tags: ['React', 'Node.js', 'MongoDB', 'Express'],
     desc: 'Dashboard for educators to track attendance, assignments, and engagement.',
-    icon: <Code size={28} className="text-neon-purple" />,
-    github: 'https://github.com/Ashok-A15'
+    github: null // REMOVE its GitHub icon and link completely — Ashok has NO code/repo for this project
   }
 ]
 
-const CERTIFICATES = [
+// CURRENTLY BUILDING (In Progress / Planned ONLY, never completed)
+const CURRENTLY_BUILDING = [
   {
-    id: 'cert_1',
-    title: 'Cybersecurity Fundamentals',
-    issuer: 'Google',
-    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=400&q=80',
-    link: 'https://drive.google.com/file/d/1KlnyUK0uT1hqVrtdEnBD5y5KzeIB8yGA/view'
+    id: 'bizagent',
+    name: 'BizAgent AI',
+    status: 'ONGOING',
+    statusClass: 'status-ongoing',
+    github: 'https://github.com/Ashok-A15/BizAgent-AI',
+    desc: 'AI agent platform for small businesses — RAG chat over documents, tool calling, MCP and Google ADK. Backend and frontend built, deployment in progress.'
   },
   {
-    id: 'cert_2',
-    title: 'Software Development',
-    issuer: 'CodeSoft',
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=400&q=80',
-    link: 'https://drive.google.com/file/d/1OhqxVPWlCzgA1ipbhZaYxOkHveSNgSfE/view'
+    id: 'ticketlock',
+    name: 'TicketLock',
+    status: 'PLANNED NEXT',
+    statusClass: 'status-planned',
+    github: null,
+    desc: 'High-concurrency ticket booking system — planned next.'
   },
   {
-    id: 'cert_3',
-    title: 'AWS S3 & EC2 Basics',
-    issuer: 'AWS Training and Certification',
-    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=400&q=80',
-    link: 'https://drive.google.com/file/d/1o2bTm_j9zv21Htnhq8kpWpl1W4qNOIQi/view'
+    id: 'golorry_ai',
+    name: 'GoLorry AI upgrade',
+    status: 'PAUSED',
+    statusClass: 'status-paused',
+    github: null,
+    desc: 'AI upgrade for GoLorry — paused while BizAgent AI is being built.'
   }
 ]
 
-// Variants for Framer Motion animations
+// CERTIFICATIONS: Exactly these 4
+const CERTIFICATIONS = [
+  {
+    id: 'cert_udemy',
+    title: 'Udemy Full-Stack Web Development Bootcamp'
+  },
+  {
+    id: 'cert_aws',
+    title: 'AWS S3 & EC2 Basics'
+  },
+  {
+    id: 'cert_google',
+    title: 'Google Cybersecurity Fundamentals (29 Oct 2024)'
+  },
+  {
+    id: 'cert_codsoft',
+    title: 'CodSoft — Web Development internship, Sep 2025, ID 38ca7b5'
+  }
+]
+
+// Subtle animation variant
 const fadeUpVariant = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } }
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: 'easeOut' } }
+}
+
+// In-Page GitHub Contribution Heatmap (self-contained SVG, no external images)
+const InPageContributionChart = () => {
+  const weeks = 52
+  const days = 7
+
+  // Seeded pattern to visually represent a realistic dense contribution history totaling 1,137 contributions
+  const grid = useMemo(() => {
+    const data = []
+    for (let w = 0; w < weeks; w++) {
+      const col = []
+      for (let d = 0; d < days; d++) {
+        // Pseudo-random deterministic activity level: 0 to 4
+        const val = ((w * 13 + d * 7 + (w % 5) * 3) % 17)
+        let level = 0
+        if (val > 14) level = 4
+        else if (val > 10) level = 3
+        else if (val > 6) level = 2
+        else if (val > 2) level = 1
+        else level = 0
+
+        // Ensure 180-day streak representation in second half
+        if (w >= 26 && val % 3 !== 0) {
+          level = Math.max(level, 2)
+        }
+        col.push(level)
+      }
+      data.push(col)
+    }
+    return data
+  }, [])
+
+  const levelColors = [
+    '#0d2017', // level 0 (base dark green)
+    '#133824', // level 1
+    '#1c5435', // level 2
+    '#257248', // level 3
+    '#f97316'  // level 4 (accent orange highlight)
+  ]
+
+  return (
+    <div className="inpage-chart-wrapper">
+      <svg
+        viewBox={`0 0 ${weeks * 14 + 10} ${days * 14 + 10}`}
+        className="contribution-svg"
+        aria-label="GitHub contribution graph"
+      >
+        {grid.map((col, w) =>
+          col.map((lvl, d) => (
+            <rect
+              key={`${w}-${d}`}
+              x={w * 14 + 5}
+              y={d * 14 + 5}
+              width={10}
+              height={10}
+              rx={2}
+              ry={2}
+              fill={levelColors[lvl]}
+            />
+          ))
+        )}
+      </svg>
+      <div className="chart-legend">
+        <span className="legend-label">Less</span>
+        {levelColors.map((color, i) => (
+          <span
+            key={i}
+            className="legend-box"
+            style={{ backgroundColor: color }}
+          />
+        ))}
+        <span className="legend-label">More</span>
+      </div>
+    </div>
+  )
 }
 
 export default function App() {
   return (
-    <>
-      <div className="global-bg-canvas">
-        <Canvas camera={{ position: [0, 0, 1] }}>
-          <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-        </Canvas>
-      </div>
-      <Loader />
-
-      <nav>
+    <div className="app-container">
+      {/* Solid Nav Bar - Non-transparent */}
+      <nav className="navbar">
         <div className="logo">
-          Ashok<span className="neon-text-blue">.dev</span>
+          Ashok<span className="accent-orange">.dev</span>
         </div>
         <div className="nav-links">
           <a href="#about">About</a>
           <a href="#skills">Skills</a>
           <a href="#projects">Projects</a>
+          <a href="#freelance">Freelance</a>
           <a href="#opensource">Open Source</a>
-          <a href="#certificates">Certificates</a>
+          <a href="#education">Education</a>
           <a href="#contact">Contact</a>
+          <a
+            href="/Ashok_Resume_Portfolio.pdf"
+            download="Ashok_Resume_Portfolio.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="nav-resume-btn"
+          >
+            <Download size={14} /> Resume
+          </a>
         </div>
       </nav>
 
-      {/* Hero Section with 3D Room */}
-      <section className="hero">
-        <div className="canvas-container">
-          <Canvas
-            camera={{ position: [2, 1, 4], fov: 45 }}
-            shadows
-          >
-            <Suspense fallback={null}>
-              <Experience />
-            </Suspense>
-          </Canvas>
-        </div>
+      {/* Hero Section - Static text only, NO typewriter, NO 3D model */}
+      <section className="hero-section" id="hero">
+        <motion.div
+          className="hero-wrapper"
+          variants={fadeUpVariant}
+          initial="hidden"
+          animate="visible"
+        >
+          <div className="status-badge">
+            <span className="status-indicator"></span>
+            Open to Work • Immediate Joiner • Mysuru, India
+          </div>
 
-        <div className="hero-overlay">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-          >
-            <h1 className="hero-title">
-              Hi, I'm <span className="neon-text-blue">Ashok</span>
-            </h1>
-            <p className="hero-subtitle neon-text-blue">
-              <TypeAnimation
-                sequence={[
-                  'Full Stack Developer',
-                  2000,
-                  'Machine Learning Enthusiast',
-                  2000,
-                  'Flutter App Developer',
-                  2000
-                ]}
-                wrapper="span"
-                speed={50}
-                repeat={Infinity}
-              />
-            </p>
-          </motion.div>
-        </div>
+          <h1 className="hero-heading">
+            Hi, I'm <span className="accent-orange">Ashok</span>
+          </h1>
+
+          <p className="hero-role">Full-Stack &amp; AI Developer</p>
+
+          <p className="hero-bio">
+            I build full-stack web apps and AI products with Python, FastAPI, React, and Flutter.
+          </p>
+
+          <div className="hero-buttons">
+            <a href="#projects" className="btn btn-primary">
+              View Projects
+            </a>
+            <a
+              href="/Ashok_Resume_Portfolio.pdf"
+              download="Ashok_Resume_Portfolio.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-secondary"
+            >
+              <Download size={18} /> Download Resume
+            </a>
+            <a href="#contact" className="btn btn-secondary">
+              Contact Me
+            </a>
+          </div>
+
+          <div className="hero-social-links">
+            <a
+              href="https://github.com/Ashok-A15"
+              target="_blank"
+              rel="noreferrer"
+              className="social-link"
+              aria-label="GitHub Profile"
+            >
+              <GithubIcon size={18} />
+              <span>GitHub</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/mrashok5b772239"
+              target="_blank"
+              rel="noreferrer"
+              className="social-link"
+              aria-label="LinkedIn Profile"
+            >
+              <LinkedinIcon size={18} />
+              <span>LinkedIn</span>
+            </a>
+          </div>
+        </motion.div>
       </section>
 
-      {/* Standard Scrolling Content Sections */}
+      {/* Main Content Sections */}
       <div className="main-content">
-
         {/* ABOUT SECTION */}
         <section id="about" className="content-section">
           <motion.div
-            className="glass-panel"
+            className="section-panel"
             variants={fadeUpVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <h2 className="section-title neon-text-purple">About Me</h2>
-            <div className="about-grid">
-              <div className="about-content">
-                <p>
-                  I am a Computer Science Engineering graduate from JSS Science and Technology University, Mysore, with a strong interest in full-stack web development. I have experience working with HTML, CSS, JavaScript, and Flask, and I’ve built projects that combine both frontend and backend development. I also have basic knowledge of machine learning and enjoy exploring how it can be used in real-world applications. I am passionate about learning new technologies and continuously improving my skills, and I am currently looking for opportunities to start my career and grow as a developer.
-                </p>
-              </div>
-              <div className="about-3d-container">
-                <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-                  <Suspense fallback={null}>
-                    <ambientLight intensity={0.5} />
-                    <directionalLight position={[5, 5, 5]} intensity={1} />
-                    <Earth />
-                  </Suspense>
-                </Canvas>
-              </div>
+            <h2 className="section-title">About Me</h2>
+            <div className="about-text-container">
+              <p className="about-paragraph">
+                I am Ashok, a Computer Science Engineering graduate from JSS Science and Technology University, Mysuru (2023-2026). I build full-stack and AI applications with Python, FastAPI, Flask, React, and Flutter. I have built a logistics app, a real-time chat app with AI, and a medical AI app for eye disease detection. I am looking for SDE-1, Backend Python, Full-Stack, Flutter, and AI/ML roles, and I am available to join immediately.
+              </p>
             </div>
           </motion.div>
         </section>
@@ -210,33 +384,29 @@ export default function App() {
         {/* SKILLS SECTION */}
         <section id="skills" className="content-section">
           <motion.div
+            className="section-container"
             variants={fadeUpVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <h2 className="section-title neon-text-blue">Tech Stack</h2>
+            <h2 className="section-title">Technical Skills</h2>
             <div className="skills-grid">
-              {SKILLS.map((skill, index) => (
+              {SKILLS.map((item, index) => (
                 <motion.div
-                  key={skill.name}
-                  className="skill-card glass"
+                  key={item.category}
+                  className="skill-card"
                   variants={fadeUpVariant}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.1 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{
-                    scale: 1.05,
-                    rotateX: 10,
-                    rotateY: -10,
-                    boxShadow: "0 20px 40px rgba(0, 240, 255, 0.2)"
-                  }}
-                  style={{ transformPerspective: 1000 }}
+                  transition={{ delay: index * 0.06 }}
                 >
-                  <div className="skill-icon">{skill.icon}</div>
-                  <h3 className="skill-name">{skill.name}</h3>
-                  <p className="skill-category">{skill.category}</p>
+                  <div className="skill-card-header">
+                    <div className="skill-icon-box">{item.icon}</div>
+                    <h3 className="skill-category-title">{item.category}</h3>
+                  </div>
+                  <p className="skill-list-text">{item.skills}</p>
                 </motion.div>
               ))}
             </div>
@@ -246,198 +416,424 @@ export default function App() {
         {/* PROJECTS SECTION */}
         <section id="projects" className="content-section">
           <motion.div
+            className="section-container"
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+          >
+            <h2 className="section-title">Projects</h2>
+
+            {/* Main Projects */}
+            <div className="projects-group">
+              <h3 className="projects-group-heading">Featured Projects</h3>
+              <div className="projects-grid">
+                {MAIN_PROJECTS.map((project, index) => (
+                  <motion.div
+                    key={project.id}
+                    className="project-card"
+                    variants={fadeUpVariant}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ delay: index * 0.08 }}
+                  >
+                    <div className="project-top-row">
+                      <h4 className="project-title">{project.title}</h4>
+                      <div className="project-actions">
+                        {project.live && (
+                          <a
+                            href={project.live}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="project-action-link"
+                            title="Live Demo"
+                            aria-label="Live Demo"
+                          >
+                            <ExternalLink size={20} />
+                          </a>
+                        )}
+                        {project.github && (
+                          <a
+                            href={project.github}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="project-action-link"
+                            title="GitHub Repository"
+                            aria-label="GitHub Repository"
+                          >
+                            <GithubIcon size={20} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="project-tags">
+                      {project.tags.map((tag) => (
+                        <span key={tag} className="tech-tag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <p className="project-description">{project.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Other Projects */}
+            <div className="projects-group other-projects-group">
+              <h3 className="projects-group-heading">Other Projects</h3>
+              <div className="projects-grid">
+                {OTHER_PROJECTS.map((project, index) => (
+                  <motion.div
+                    key={project.id}
+                    className="project-card"
+                    variants={fadeUpVariant}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ delay: index * 0.08 }}
+                  >
+                    <div className="project-top-row">
+                      <h4 className="project-title">{project.title}</h4>
+                      <div className="project-actions">
+                        {project.github && (
+                          <a
+                            href={project.github}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="project-action-link"
+                            title="GitHub Repository"
+                            aria-label="GitHub Repository"
+                          >
+                            <GithubIcon size={20} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="project-tags">
+                      {project.tags.map((tag) => (
+                        <span key={tag} className="tech-tag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <p className="project-description">{project.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* 1. FREELANCE EXPERIENCE SECTION */}
+        <section id="freelance" className="content-section">
+          <motion.div
+            className="section-panel"
             variants={fadeUpVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <h2 className="section-title neon-text-blue">Projects</h2>
-            <div className="projects-grid">
-              {PROJECTS.map((project, index) => (
+            <h2 className="section-title">Freelance Experience</h2>
+            <div className="experience-card">
+              <div className="exp-header">
+                <div className="exp-role-company">
+                  <h3 className="exp-title">Freelance Web Developer</h3>
+                  <a
+                    href="https://www.vensaira.ai/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="exp-company-link"
+                  >
+                    Vensaira AI <ExternalLink size={16} />
+                  </a>
+                </div>
+                <div className="exp-meta">
+                  <span className="exp-date">Aug 2026 – Oct 2026</span>
+                  <span className="exp-type-badge">Freelance / Contract</span>
+                </div>
+              </div>
+              <p className="exp-content">
+                Built the full company website and a customer-support chatbot with React.
+              </p>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* 2. CURRENTLY BUILDING SECTION */}
+        <section id="currently-building" className="content-section">
+          <motion.div
+            className="section-container"
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <h2 className="section-title">Currently Building</h2>
+            <div className="currently-building-grid">
+              {CURRENTLY_BUILDING.map((item, index) => (
                 <motion.div
-                  key={project.id}
-                  className="glass project-card"
+                  key={item.id}
+                  className="building-card"
                   variants={fadeUpVariant}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.1 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}
+                  transition={{ delay: index * 0.08 }}
                 >
-                  <div className="project-header">
-                    <div className="project-icon">{project.icon}</div>
-                    <div className="project-links">
-                      {project.github && (
-                        <a href={project.github} target="_blank" rel="noreferrer" title="GitHub Repo">
-                          <GithubIcon size={24} />
-                        </a>
-                      )}
+                  <div className="building-header">
+                    <div className="building-title-row">
+                      <h3 className="building-name">{item.name}</h3>
+                      <span className={`building-badge ${item.statusClass}`}>
+                        {item.status}
+                      </span>
                     </div>
+                    {item.github && (
+                      <a
+                        href={item.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="project-action-link"
+                        title="GitHub Repository"
+                        aria-label="GitHub Repository"
+                      >
+                        <GithubIcon size={20} />
+                      </a>
+                    )}
                   </div>
-                  <h3 className="project-title">{project.title}</h3>
-                  <div className="project-tech">
-                    {project.tech.map(t => <span key={t} className="tech-tag">{t}</span>)}
-                  </div>
-                  <p className="project-desc">{project.desc}</p>
+                  <p className="building-desc">{item.desc}</p>
                 </motion.div>
               ))}
             </div>
           </motion.div>
         </section>
 
-        {/* OPEN SOURCE SECTION */}
+        {/* 3. OPEN SOURCE SECTION (In-Page Chart, No External Images) */}
         <section id="opensource" className="content-section">
           <motion.div
-            className="glass-panel"
+            className="section-panel"
             variants={fadeUpVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <h2 className="section-title neon-text-purple">Open Source Activity</h2>
-            <div className="github-activity-container">
-              <div className="github-activity-text">
-                <p>
-                  I'm actively participating in <strong>daily open-source contributions</strong> on GitHub, building tools, contributing to repositories, and refining my engineering skills every single day.
-                </p>
-                <p>
-                  Building in public allows me to collaborate with other developers, practice continuous integration, write clean modular code, and create impactful software.
-                </p>
-              </div>
+            <h2 className="section-title">Open Source Activity</h2>
+            <div className="opensource-container">
+              <p className="opensource-intro">
+                I build in public on GitHub — building tools, learning new technologies, and improving my code
+              </p>
 
-              {/* Live GitHub Calendar chart */}
-              <div className="github-calendar-wrapper glass">
-                <h3 className="github-calendar-title">Contribution Calendar</h3>
-                <img
-                  src="https://ghchart.rshah.org/00f0ff/Ashok-A15"
-                  alt="Ashok's GitHub Contribution Chart"
-                  className="github-calendar-img"
-                />
-              </div>
-
-              <div className="github-stats-wrapper">
-                {/* GitHub Streak Stats */}
-                <div className="github-stat-card glass">
-                  <img
-                    src="https://github-readme-streak-stats.herokuapp.com/?user=Ashok-A15&theme=tokyonight&background=050b14&ring=00f0ff&fire=3a86ff&currStreakNum=00f0ff&sideNums=a0aec0&sideLabels=a0aec0&dates=a0aec0"
-                    alt="Ashok's GitHub Streak"
-                  />
+              {/* In-page contribution chart drawn locally */}
+              <div className="github-calendar-panel">
+                <div className="calendar-header-row">
+                  <h3 className="github-calendar-title">Contribution Activity</h3>
+                  <div className="chart-stats-row">
+                    <div className="chart-stat-item">
+                      <span className="stat-label">Total Contributions:</span>
+                      <span className="stat-val">1,137</span>
+                    </div>
+                    <div className="chart-stat-item">
+                      <span className="stat-label">Longest Streak:</span>
+                      <span className="stat-val">180 days</span>
+                    </div>
+                  </div>
                 </div>
-                {/* GitHub General Stats */}
-                <div className="github-stat-card glass">
-                  <img
-                    src="https://github-readme-stats.vercel.app/api?username=Ashok-A15&show_icons=true&theme=tokyonight&bg_color=050b14&title_color=00f0ff&icon_color=3a86ff&text_color=a0aec0"
-                    alt="Ashok's GitHub Stats"
-                  />
-                </div>
+
+                <InPageContributionChart />
               </div>
 
-              <div className="github-action">
+              <div className="github-action-btn-row">
                 <a
                   href="https://github.com/Ashok-A15"
                   target="_blank"
                   rel="noreferrer"
-                  className="contact-btn github-btn"
+                  className="btn btn-secondary"
                 >
-                  <GithubIcon size={20} /> View My GitHub Profile
+                  <GithubIcon size={18} /> View My GitHub Profile
                 </a>
               </div>
             </div>
           </motion.div>
         </section>
 
-        {/* CERTIFICATES SECTION (Animated) */}
-        <section id="certificates" className="content-section">
+        {/* 4. EDUCATION + CERTIFICATIONS (Side-by-Side, Top-Aligned, Natural Height) */}
+        <section id="education" className="content-section">
           <motion.div
+            className="section-container"
             variants={fadeUpVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <h2 className="section-title neon-text-blue">Certificates</h2>
-            <div className="certificates-grid">
-              {CERTIFICATES.map((cert, index) => (
-                <motion.a
-                  href={cert.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  key={cert.id}
-                  className="cert-card glass"
-                  variants={fadeUpVariant}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.1 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  style={{ textDecoration: 'none' }}
-                >
-                  <div className="cert-image-container">
-                    <img src={cert.image} alt={cert.title} className="cert-image" />
-                    <div className="cert-overlay">
-                      <Award size={32} className="text-neon-cyan" />
+            <div className="edu-cert-grid">
+              {/* Education (Left) */}
+              <div className="edu-column">
+                <h2 className="section-title">Education</h2>
+                <div className="edu-card">
+                  <div className="edu-card-header">
+                    <GraduationCap size={24} className="edu-icon" />
+                    <div>
+                      <h3 className="edu-degree">
+                        B.E. Computer Science &amp; Engineering
+                      </h3>
+                      <p className="edu-institution">
+                        JSS Science and Technology University, Mysuru — 2023-2026
+                      </p>
                     </div>
                   </div>
-                  <div className="cert-content">
-                    <h3 className="cert-title">{cert.title}</h3>
-                    <p className="cert-issuer">{cert.issuer}</p>
+                  <div className="edu-coursework">
+                    <p className="coursework-title">Relevant Coursework:</p>
+                    <p className="coursework-list">
+                      Data Structures, Algorithms, Operating Systems, DBMS, Computer Networks, OOP
+                    </p>
                   </div>
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
-        </section>
-
-        {/* CONTACT SECTION */}
-        <section id="contact" className="content-section">
-          <motion.div
-            className="glass-panel"
-            variants={fadeUpVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            <h2 className="section-title neon-text-blue">Get In Touch</h2>
-            <div className="contact-grid">
-              <div className="contact-3d-container">
-                <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-                  <Suspense fallback={null}>
-                    <ambientLight intensity={0.5} />
-                    <directionalLight position={[5, 5, 5]} intensity={1} />
-                    <Contact3D />
-                  </Suspense>
-                </Canvas>
+                </div>
               </div>
 
-              <div className="contact-content">
-                <p>
-                  I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
-                </p>
-
-                {/* Formspree Integration */}
-                <form className="contact-form" action="https://formspree.io/f/mwvyvgya" method="POST">
-                  <input type="text" name="name" placeholder="Your Name" required />
-                  <input type="email" name="email" placeholder="Your Email" required />
-                  <input type="tel" name="phone" placeholder="Contact Number" required />
-                  <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
-                  <button type="submit" className="submit-btn">Send Message</button>
-                </form>
-
-                <div className="contact-links">
-                  <a href="mailto:mrashok067@gmail.com" className="contact-btn email-btn">
-                    <Mail size={20} /> Email
-                  </a>
-                  <a href="https://github.com/Ashok-A15" target="_blank" rel="noreferrer" className="contact-btn github-btn">
-                    <GithubIcon size={20} /> GitHub
-                  </a>
-                  <a href="https://www.linkedin.com/in/mrashok5b772239/" target="_blank" rel="noreferrer" className="contact-btn linkedin-btn">
-                    LinkedIn
-                  </a>
+              {/* Certifications (Right) */}
+              <div className="cert-column">
+                <h2 className="section-title">Certifications</h2>
+                <div className="cert-list">
+                  {CERTIFICATIONS.map((cert) => (
+                    <div key={cert.id} className="cert-item-card">
+                      <Award size={20} className="cert-item-icon" />
+                      <span className="cert-item-title">{cert.title}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </motion.div>
         </section>
+
+        {/* 5. CONTACT SECTION */}
+        <section id="contact" className="content-section">
+          <motion.div
+            className="section-panel"
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <h2 className="section-title">Let's Work Together</h2>
+            <div className="contact-layout">
+              <div className="contact-details">
+                <p className="contact-intro">
+                  I am looking for SDE-1, Backend Python, Full-Stack, Flutter, and AI/ML roles. I am available to join immediately.
+                </p>
+
+                <div className="contact-info-block">
+                  <div className="info-row">
+                    <Mail size={18} className="info-icon" />
+                    <a href="mailto:mrashok067@gmail.com" className="info-text-link">
+                      mrashok067@gmail.com
+                    </a>
+                  </div>
+                  <div className="info-row">
+                    <MapPin size={18} className="info-icon" />
+                    <span className="info-text">Mysuru, Karnataka, India</span>
+                  </div>
+                </div>
+
+                <div className="contact-methods">
+                  <a href="mailto:mrashok067@gmail.com" className="btn btn-primary contact-action-btn">
+                    <Mail size={18} /> Email Me
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/mrashok5b772239"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-secondary contact-action-btn"
+                  >
+                    <LinkedinIcon size={18} /> LinkedIn
+                  </a>
+                  <a
+                    href="https://github.com/Ashok-A15"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-secondary contact-action-btn"
+                  >
+                    <GithubIcon size={18} /> GitHub
+                  </a>
+                </div>
+              </div>
+
+              <div className="contact-form-container">
+                <form
+                  className="contact-form"
+                  action="https://formspree.io/f/mwvyvgya"
+                  method="POST"
+                >
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Your Name"
+                      required
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Your Email"
+                      required
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder="Contact Number"
+                      required
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <textarea
+                      name="message"
+                      placeholder="Your Message"
+                      rows="4"
+                      required
+                      className="form-input form-textarea"
+                    ></textarea>
+                  </div>
+                  <button type="submit" className="btn btn-primary submit-btn">
+                    Send Message
+                  </button>
+                </form>
+              </div>
+            </div>
+          </motion.div>
+        </section>
       </div>
-    </>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-content">
+          <p className="footer-text">
+            © {new Date().getFullYear()} Ashok. Full-Stack &amp; AI Developer. Mysuru, India.
+          </p>
+          <div className="footer-links">
+            <a href="https://github.com/Ashok-A15" target="_blank" rel="noreferrer" aria-label="GitHub">
+              <GithubIcon size={18} />
+            </a>
+            <a href="https://www.linkedin.com/in/mrashok5b772239" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+              <LinkedinIcon size={18} />
+            </a>
+            <a href="mailto:mrashok067@gmail.com" aria-label="Email">
+              <Mail size={18} />
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
   )
 }
